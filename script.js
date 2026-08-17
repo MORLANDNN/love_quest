@@ -45,20 +45,39 @@ const monologueAudio = document.getElementById('monologue-audio');
 
 // Состояние приложения
 let currentStepIndex = 0;
-const FADE_DURATION = 3000; // Длительность перехода (мс)
+const FADE_DURATION = 1500; // Длительность перехода (мс)
+
+// Загрузка сохраненного шага из localStorage
+function getSavedStep() {
+  try {
+    const saved = localStorage.getItem('route_current_step');
+    if (saved !== null) {
+      const parsed = parseInt(saved, 10);
+      if (!isNaN(parsed) && parsed >= 0) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.error('Ошибка чтения localStorage:', e);
+  }
+  return 0;
+}
+
+// Сохранение шага в localStorage
+function saveStep(index) {
+  try {
+    localStorage.setItem('route_current_step', index.toString());
+  } catch (e) {
+    console.error('Ошибка записи в localStorage:', e);
+  }
+}
 
 // Инициализация при загрузке страницы
 window.addEventListener('DOMContentLoaded', () => {
-  const savedStep = localStorage.getItem('route_current_step');
-  if (savedStep !== null) {
-    currentStepIndex = parseInt(savedStep, 10);
-    if (isNaN(currentStepIndex) || currentStepIndex >= routeSteps.length) {
-      currentStepIndex = 0;
-    }
-  }
+  currentStepIndex = getSavedStep();
 });
 
-// Кнопка "Начать" — снимает ограничение Autoplay
+// Кнопка "Начать" / "Продолжить"
 startBtn.addEventListener('click', () => {
   startScreen.classList.add('hidden');
   mainScreen.classList.remove('hidden');
@@ -67,6 +86,8 @@ startBtn.addEventListener('click', () => {
 
 // Загрузка этапа
 function loadStep(index) {
+  saveStep(index); // Сохраняем текущий этап сразу при его загрузке
+
   if (index >= routeSteps.length) {
     showFinish();
     return;
@@ -82,17 +103,17 @@ function loadStep(index) {
   card.classList.remove('hidden');
   monologueStatus.classList.add('hidden');
 
-  // Безопасное обновление и запуск фонового аудио
+  // Запуск фонового аудио
   playBgAudio(step.bgAudio);
 }
 
-// Функция безопасного воспроизведения фона
+// Функция воспроизведения фона
 function playBgAudio(srcPath) {
   const targetSrc = new URL(srcPath, window.location.href).href;
 
   if (bgAudio.src !== targetSrc) {
     bgAudio.src = srcPath;
-    bgAudio.load(); // Принудительная перезагрузка ресурса
+    bgAudio.load();
   }
 
   bgAudio.volume = 1;
@@ -100,7 +121,7 @@ function playBgAudio(srcPath) {
   const playPromise = bgAudio.play();
   if (playPromise !== undefined) {
     playPromise.catch(error => {
-      console.warn('Автовоспроизведение фона не удалось или файл не найден:', error);
+      console.warn('Автовоспроизведение фона не удалось:', error);
     });
   }
 }
@@ -114,23 +135,13 @@ arrivedBtn.addEventListener('click', () => {
 
   // Переход от фонового лупа к монологу
   crossfade(bgAudio, monologueAudio, step.monologueAudio, () => {
-    // После окончания монолога
+    // Переход к следующему этапу после монолога
     currentStepIndex++;
-    localStorage.setItem('route_current_step', currentStepIndex);
-
-    if (currentStepIndex < routeSteps.length) {
-      const nextStep = routeSteps[currentStepIndex];
-      // Возврат к фоновому лупу следующего этапа
-      crossfade(monologueAudio, bgAudio, nextStep.bgAudio, () => {
-        loadStep(currentStepIndex);
-      });
-    } else {
-      showFinish();
-    }
+    loadStep(currentStepIndex);
   });
 });
 
-// Функция плавного перехода между треками (Crossfade)
+// Плавный переход между треками (Crossfade)
 function crossfade(fromAudio, toAudio, toSrc, onEndedCallback) {
   toAudio.src = toSrc;
   toAudio.load();
@@ -150,14 +161,12 @@ function crossfade(fromAudio, toAudio, toSrc, onEndedCallback) {
   const fadeInterval = setInterval(() => {
     currentStep++;
 
-    // Уменьшаем громкость текущего
     if (fromAudio.volume - volumeStep > 0) {
       fromAudio.volume -= volumeStep;
     } else {
       fromAudio.volume = 0;
     }
 
-    // Увеличиваем громкость следующего
     if (toAudio.volume + volumeStep < 1) {
       toAudio.volume += volumeStep;
     } else {
@@ -186,9 +195,11 @@ function showFinish() {
   bgAudio.pause();
 }
 
-// Функция сброса прогресса (для отладки)
+// Функция сброса прогресса (вызови в консоли браузера: resetProgress())
 function resetProgress() {
-  localStorage.removeItem('route_current_step');
+  try {
+    localStorage.removeItem('route_current_step');
+  } catch (e) {}
   currentStepIndex = 0;
   location.reload();
 }
