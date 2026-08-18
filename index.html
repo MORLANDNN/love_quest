@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Маршрут-Сюрприз</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Стартовый экран -->
+  <div id="start-screen" class="screen">
+    <div class="content-box">
+      <h1>Привет!</h1>
+      <p>Нажми кнопку, чтобы начать путешествие.</p>
+      <button id="start-btn" class="btn">Начать</button>
+    </div>
+  </div>
+
+  <!-- Главный экран квеста/маршрута -->
+  <div id="main-screen" class="screen hidden">
+    
+    <!-- Карточка текущей точки -->
+    <div id="card" class="card">
+      <img id="card-image" src="" alt="Изображение точки">
+      <h2 id="card-title"></h2>
+      <p id="card-description"></p>
+      <button id="arrived-btn" class="btn">Я на месте</button>
+    </div>
+
+    <!-- Блок воспроизведения монолога -->
+    <div id="monologue-status" class="status-box hidden">
+      <p class="pulse-text">🔊 Воспроизводится монолог...</p>
+      
+      <!-- Прогресс-бар -->
+      <div class="progress-container">
+        <span id="current-time">0:00</span>
+        <div id="progress-bar-wrapper" class="progress-bar-wrapper">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+        <span id="total-duration">0:00</span>
+      </div>
+
+      <div class="audio-controls">
+        <button id="restart-btn" class="ctrl-btn" title="Начать сначала">
+          <svg class="btn-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M17.17,24a1,1,0,0,1-.71-.29L8.29,15.54a5,5,0,0,1,0-7.08L16.46.29a1,1,0,1,1,1.42,1.42L9.71,9.88a3,3,0,0,0,0,4.24l8.17,8.17a1,1,0,0,1,0,1.42A1,1,0,0,1,17.17,24Z"/>
+          </svg>
+        </button>
+
+        <button id="toggle-play-btn" class="ctrl-btn main-ctrl" title="Пауза / Плей">
+          <svg id="icon-pause" class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6.5,0A3.5,3.5,0,0,0,3,3.5v17a3.5,3.5,0,0,0,7,0V3.5A3.5,3.5,0,0,0,6.5,0Z"/><path d="M17.5,0A3.5,3.5,0,0,0,14,3.5v17a3.5,3.5,0,0,0,7,0V3.5A3.5,3.5,0,0,0,17.5,0Z"/>
+          </svg>
+          <svg id="icon-play" class="btn-icon hidden" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.492,7.969,10.954.975A5,5,0,0,0,3,5.005V19a4.994,4.994,0,0,0,7.954,4.03l9.538-6.994a5,5,0,0,0,0-8.062Z"/>
+          </svg>
+        </button>
+
+        <button id="skip-btn" class="ctrl-btn" title="Пропустить">
+          <svg class="btn-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M7,24a1,1,0,0,1-.71-.29,1,1,0,0,1,0-1.42l8.17-8.17a3,3,0,0,0,0-4.24L6.29,1.71A1,1,0,0,1,7.71.29l8.17,8.17a5,5,0,0,1,0,7.08L7.71,23.71A1,1,0,0,1,7,24Z"/>
+          </svg>
+        </button>
+      </div>
+    </div> <!-- Исправлено: закрывающий тег monologue-status -->
+
+    <!-- Экран завершения -->
+    <div id="finish-box" class="finish-box hidden">
+      <h2>Ты пришла! ❤️</h2>
+      <p>Ты прошла весь маршрут. Жду тебя!</p>
+    </div>
+
+  </div>
+
+  <!-- Скрытые аудиоэлементы -->
+  <audio id="bg-audio" loop preload="auto"></audio>
+  <audio id="monologue-audio" preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
