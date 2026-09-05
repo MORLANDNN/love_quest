@@ -488,9 +488,14 @@ function crossfade(fromAudio, toAudio, toSrc, onFadeCompleteCallback) {
 
       fromAudio.pause();
       
+      // Сбрасываем время только если затухает монолог, а не фоновая музыка
+      if (fromAudio.id !== 'bg-audio') {
+        fromAudio.currentTime = 0;
+      }
 
       fromAudio.volume = 1;
       toAudio.volume = 1;
+		
 
       if (onFadeCompleteCallback) {
         onFadeCompleteCallback();
