@@ -487,7 +487,7 @@ function crossfade(fromAudio, toAudio, toSrc, onFadeCompleteCallback) {
       fadeInterval = null;
 
       fromAudio.pause();
-      fromAudio.currentTime = 0;
+      
 
       fromAudio.volume = 1;
       toAudio.volume = 1;
