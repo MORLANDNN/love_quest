@@ -1,197 +1,543 @@
-/* Сброс базовых стилей */
+/* ==========================================================================
+   Подключение локальных шрифтов из папки /fonts
+   ========================================================================== */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('fonts/CormorantGaramond-SemiBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('fonts/CormorantGaramond-Regular.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('fonts/Nunito-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('fonts/Nunito-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+/* ==========================================================================
+   Единая визуальная система
+   ========================================================================== */
+:root {
+  --color-fern: #768e78;
+  --color-pistachio: #c6c09c;
+  --color-fennel: #ebdecc;
+  --color-cherry: #fecdbe;
+  --color-peony: #e79897;
+  --color-bluebell: #b7cbdb;
+  --color-honey: #fcc88a;
+  
+  --color-bg: #768e78;
+  --color-surface: #fbf8f1;
+  --color-surface-soft: rgba(255, 255, 255, 0.58);
+  --color-surface-solid: #ffffff;
+  --color-primary: #e79897;
+  --color-primary-soft: rgba(231, 152, 151, 0.18);
+  --color-accent: #fcc88a;
+
+  --text-primary: #253327;
+  --text-secondary: #4a5c4d;
+  --text-muted: #6a7c6d;
+  --text-on-accent: #1c2b1e;
+
+  --glass-bg: rgba(251, 248, 241, 0.90);
+  --glass-border: rgba(255, 255, 255, 0.48);
+  --ui-border: rgba(118, 142, 120, 0.18);
+
+  --shadow-soft: 0 8px 24px rgba(18, 30, 20, 0.10);
+  --shadow-card: 0 14px 36px rgba(18, 30, 20, 0.16);
+  --shadow-button: 0 5px 16px rgba(231, 152, 151, 0.24);
+
+  --radius-card: 28px;
+  --radius-control: 16px;
+  --radius-small: 12px;
+
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+/* ==========================================================================
+   Сброс базовых стилей
+   ========================================================================== */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
 }
-
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #121212;
-  color: #ffffff;
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--text-primary);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 16px;
+  padding: 20px 16px;
+  position: relative;
+  overflow-x: hidden;
 }
-
+/* Эффект свечения фоновых градиентов */
+.bg-glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 0;
+}
+.glow-1 {
+  width: 320px;
+  height: 320px;
+  background: var(--color-peony);
+  top: -60px;
+  left: -80px;
+}
+.glow-2 {
+  width: 380px;
+  height: 380px;
+  background: var(--color-bluebell);
+  bottom: -100px;
+  right: -90px;
+}
+.glow-3 {
+  width: 250px;
+  height: 250px;
+  background: var(--color-honey);
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.25;
+}
 .screen {
   width: 100%;
-  max-width: 480px;
+  max-width: 440px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
-
-/* Единственное объявление для скрытия элементов */
 .hidden {
   display: none !important;
 }
-
-/* Стили карточки */
-.card {
-  background: #1e1e1e;
-  border-radius: 16px;
-  padding: 20px;
+/* ==========================================================================
+   Стеклянные карточки (Glassmorphism)
+   ========================================================================== */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  box-shadow: var(--shadow-card);
+}
+.content-box {
   width: 100%;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  padding: 40px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
+.welcome-title {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.welcome-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
 
-.card-image-wrapper {
-  width: 100%;
-  aspect-ratio: 3024 / 4032; /* Жесткое сохранение соотношения сторон 3:4 */
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: #121212;
+  margin-top: -16px;
+}
+/* ==========================================================================
+   Кнопка вызова боковой панели
+   ========================================================================== */
+.menu-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  background: rgba(251, 248, 241, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-control);
   display: flex;
-  justify-content: center;
   align-items: center;
-}
-
-.card-image-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Заполняет контейнер без искажений */
-  display: block;
-}
-
-.card h2 {
-  font-size: 1.4rem;
-}
-
-.card p {
-  font-size: 1rem;
-  color: #ccc;
-  line-height: 1.4;
-}
-
-/* Кнопки */
-.btn {
-  width: 50%;
-  padding: 16px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 12px;
-  background-color: #e91e63;
-  color: #ffffff;
+  justify-content: center;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transition: all 0.25s ease;
 }
-
-.btn:active {
-  transform: scale(0.98);
-  background-color: #c2185b;
+.menu-btn:active {
+  transform: scale(0.92);
+  background:#ffffff;
 }
-
-/* Статус монолога */
-.status-box {
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  width: 100%;
+.menu-icon {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
 }
-
-.pulse-text {
-  font-size: 1.1rem;
-  animation: pulse 1.5s infinite alternate;
+/* ==========================================================================
+   Боковое меню (Sidebar)
+   ========================================================================== */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(20, 32, 22, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
-
-@keyframes pulse {
-  from { opacity: 0.5; }
-  to { opacity: 1; }
+.sidebar-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
 }
-
-.finish-box {
-  background: #1e1e1e;
-  padding: 30px 20px;
-  border-radius: 16px;
-  width: 100%;
-  text-align: center;
-}
-
-/* Элементы управления монологом */
-.audio-controls {
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  max-width: 82vw;
+  height: 100vh;
+  background: rgba(251, 248, 241, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid var(--glass-border);
+  z-index: 201;
+  box-shadow: -8px 0 32px rgba(18, 30, 20, 0.2);
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-top: 20px;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
-/* Объединенные стили для .ctrl-btn */
-.ctrl-btn {
-  padding: 12px 16px;
+.sidebar.open {
+  transform: translateX(0);
+}
+.sidebar-header {
+  padding: 24px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(118, 142, 120, 0.15);
+}
+.sidebar-header h2 {
+  font-family: var(--font-serif);
+  font-size: 2.0rem;
+  font-weight: 700;
+  color: #000;
+}
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color 0.2s;
+}
+.close-btn:hover, 
+.close-btn:active {
+  color: var(--text-primary);
+}
+.sidebar-content {
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+.sidebar-item {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--color-surface-solid);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-control);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
   font-size: 0.95rem;
   font-weight: 600;
-  border: none;
-  border-radius: 10px;
-  background-color: #333333;
-  color: #ffffff;
+  text-align: left;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
 }
-
-.ctrl-btn:active {
-  transform: scale(0.95);
-  background-color: #444444;
+.sidebar-item:active {
+  background: rgba(231, 152, 151, 0.2);
+  border-color: var(--color-peony);
 }
-
-.ctrl-btn.main-ctrl {
-  background-color: #e91e63;
-  padding: 12px 24px;
-  font-size: 1rem;
+.sidebar-divider {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-top: 18px;
+  margin-bottom: 6px;
+  padding-left: 4px;
 }
-
-.ctrl-btn.main-ctrl:active {
-  background-color: #c2185b;
+.completed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-
-.btn-icon {
-  width: 24px;
-  height: 24px;
-  fill: currentColor;
-  flex-shrink: 0;
-}
-
-/* Прогресс-бар монолога */
-.progress-container {
+.completed-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-small);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #384a3b;
+}
+.completed-item::before {
+  content: "✓";
+  color: #b54f5c;
+  font-weight: bold;
+}
+/* ==========================================================================
+   Стили основной карточки
+   ========================================================================== */
+.card-container {
+  position: relative;
   width: 100%;
-  font-size: 0.85rem;
-  color: #aaa;
+  max-width: 440px;
+}
+.card {
+  padding: 22px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  will-change: transform, opacity;
+}
+.card-image-wrapper {
+  width: 100%;
+  aspect-ratio: 3024 / 4032;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.2);
+}
+.card-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.card h2 {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 0.8;
+}
+.card p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  line-height: 1;
+
+}
+/* ==========================================================================
+   Нежные кнопки
+   ========================================================================== */
+.btn {
+  width: 100%;
+  padding: 16px 20px;
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 800;
+  border: none;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(231, 152, 151, 0.92) 0%, rgba(252, 200, 138, 0.92) 100%);
+  color: var(--text-on-accent);
+  cursor: pointer;
+  box-shadow: var(--shadow-button);
+  transition: all 0.25s ease;
+}
+.btn:active {
+  transform: scale(0.97);
+  box-shadow: 0 3px 10px rgba(231, 152, 151, 0.2);
+}
+/* ==========================================================================
+   Аудиоплеер монолога
+   ========================================================================== */
+.status-box {
+  padding: 18px 16px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--ui-border);
+  border-radius: 20px;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+.pulse-text {
+  font-size: 0.95rem;
+  color: var(--color-cherry);
+  font-weight: 600;
+  animation: pulse 1.8s infinite alternate ease-in-out;
+}
+@keyframes pulse {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  width: 100%;
+  font-size: 1rem;
+  color: var(--text-primary);
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
-
 .progress-bar-wrapper {
   flex: 1;
-  height: 8px;
-  background-color: #333333;
-  border-radius: 4px;
+  height: 6px;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
   overflow: hidden;
   cursor: pointer;
   position: relative;
 }
-
 .progress-bar {
   height: 100%;
   width: 0%;
-  background-color: #e91e63;
-  border-radius: 4px;
+  background: linear-gradient(90deg, rgba(254, 205, 190, 0.92), rgba(231, 152, 151, 0.92));
+  border-radius: 3px;
   transition: width 0.1s linear;
 }
+.audio-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+}
+.ctrl-btn {
+  padding: 12px 16px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface-solid);
+  color: var(--text-primary);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ctrl-btn:active {
+  transform: scale(0.93);
+  background: #f0ece1;
+}
+.ctrl-btn.main-ctrl {
+  background: linear-gradient(135deg, rgba(231, 152, 151, 0.92) 0%, rgba(252, 200, 138, 0.92) 100%);
+  border: none;
+  color: var(--text-on-accent);
+  padding: 12px 28px;
+  box-shadow: 0 4px 14px rgba(231, 152, 151, 0.22);
+}
+.ctrl-btn.main-ctrl:active {
+  transform: scale(0.93);
+}
+.btn-icon {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+/* ==========================================================================
+   Экран завершения
+   ========================================================================== */
+.finish-box {
+  padding: 40px 24px;
+  width: 100%;
+  text-align: center;
+}
+/* Настройка самого элемента */
+.heart-icon {
+  font-size: 2.8rem;
+  margin-bottom: 8px;
+  display: inline-block; /* Важно: transform не работает на чистых inline-элементах */
+  animation: pulse 1.5s infinite alternate ease-in-out;
+}
+
+/* Описание анимации */
+@keyframes pulse {
+  0% {
+    
+	transform: scale(1.25); /* Увеличение размера на 25% */
+    opacity: 1; 
+  }
+  100% {
+	transform: scale(1);
+    opacity: 0.5;
+  }
+}
+.finish-box h2 {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+.finish-box p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
+/* ==========================================================================
+   Анимации перелистывания карточек
+   ========================================================================== */
+.card.swipe-left {
+  transform: translateX(-120%) rotate(-6deg);
+  opacity: 0;
+}
+.card-underlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  pointer-events: none;
+  transform: scale(0.96) translateY(8px) !important;
+  opacity: 0.7 !important;
+  transition: none !important;
+}
+.pointer-events-none {
+  pointer-events: none !important;
+}
+
+
